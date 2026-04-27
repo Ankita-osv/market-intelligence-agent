@@ -72,6 +72,25 @@ def fetch_market_data():
     return market_data
 
 def analyze_with_ai(news, market_data):
+     # 🔽 FILTERING
+    all_news = news
+    filtered_news = []
+
+    keywords = [
+        "fed", "interest rate", "inflation",
+        "oil", "crude", "geopolitics",
+        "earnings", "acquisition", "ipo",
+        "ai", "technology", "china", "us",
+        "india", "bond", "yield"
+    ]
+
+    for article in all_news:
+        title = str(article).lower()
+        if any(k in title for k in keywords):
+            filtered_news.append(title)
+
+    news_data = "\n".join(filtered_news[:10])
+
   prompt = f"""
 You are not a news summarizer. You are a macro strategist.
 
