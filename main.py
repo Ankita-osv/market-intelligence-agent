@@ -178,11 +178,40 @@ Give:
 1. 3 STRONG HOOKS (not clickbait, insight-driven)
 
 2. 2 REEL SCRIPTS (1–2 MINUTES EACH)
-- Conversational
-- Storytelling style
-- Explain cause → effect → impact
-- Include US + India linkage
+B. 2 HIGH-QUALITY REEL SCRIPTS (1–2 MIN EACH)
 
+Each reel MUST follow this structure:
+
+1. HOOK (first 2–3 seconds)
+- Bold, surprising, scroll-stopping
+
+2. EXPLANATION
+- Break down what happened in simple terms
+
+3. CAUSE → EFFECT
+- Explain WHY it matters
+- Connect macro → markets → sectors
+
+4. US → INDIA LINK
+- Always explain impact on Indian markets
+
+5. SMART INSIGHT
+- What smart money / institutions will do
+
+6. ACTIONABLE CLOSE
+- What should viewer watch / think / do
+
+---
+
+TONE:
+- Conversational (like explaining to a friend)
+- Confident, sharp
+- No news-anchor language
+- No phrases like “stay tuned”, “markets may fluctuate”
+
+---
+
+This should feel like a finance creator explaining markets, not a reporter reading news.
 3. 1 LONG-FORM VIDEO STRUCTURE
 - Hook
 - Build-up
