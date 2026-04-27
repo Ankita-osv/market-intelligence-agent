@@ -72,23 +72,76 @@ def fetch_market_data():
     return market_data
 
 def analyze_with_ai(news, market_data):
-    prompt = f"""
-You are a global macro strategist.
+   prompt = f"""
+You are a senior global macro analyst + content strategist.
 
-News:
-{news}
+Analyze the following news deeply:
 
-Market Data:
-{market_data}
+{news_data}
+
+Your output must be detailed, structured, and insightful. Avoid generic statements.
+
+---
+
+1. KEY NEWS SUMMARY (5–7 bullets)
+- Only important macro/market-moving updates
+
+---
+
+2. US MARKET IMPACT (DETAILED)
+- Which sectors are impacted and WHY
+- Mention specific companies (not just sectors)
+- Explain cause-effect clearly
+
+---
+
+3. INDIA MARKET IMPACT (VERY IMPORTANT)
+- Sector impact
+- Specific stocks (Nifty/BSE names)
+- FPI flows, INR movement, RBI angle
+
+---
+
+4. MULTI-LAYER IMPACT ANALYSIS
+- First-order impact (immediate)
+- Second-order impact (after few days/weeks)
+- Third-order impact (longer-term structural)
+
+---
+
+5. ASSET CLASS IMPACT
+Explain impact on:
+- Equities
+- Bonds
+- Gold
+- Crude Oil
+- USD Index
+- Crypto
+- VIX
+
+---
+
+6. SENTIMENT SCORE
+Give a score from -5 to +5 and explain WHY
+
+---
+
+7. ACTIONABLE INSIGHTS (VERY IMPORTANT)
+- What institutional investors might do
+- What retail investors might do
+- Any rotation signals (sector shift)
+
+---
+
+8. CONTENT ENGINE (HIGH QUALITY)
 
 Give:
 
-1. What happened
-2. US market impact
-3. India market impact
-4. Sector opportunities (US + India)
-5. 3 viral hooks
-6. 2 reel scripts (short)
+A. 3 VIRAL HOOKS (strong, curiosity-driven)
+B. 2 FULL REEL SCRIPTS (at least 1-2 minutes each, conversational tone)
+C. 1 LONG-FORM VIDEO IDEA (with flow structure)
+
+Make scripts engaging, not generic. Use storytelling, not bullet points.
 """
 
     response = client.chat.completions.create(
