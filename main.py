@@ -109,20 +109,22 @@ MARKET DATA:
 
 ---
 
-STEP 1: FILTER NEWS
+STEP 1: IDENTIFY ONE DOMINANT MACRO THEME
 
-From the input, SELECT ONLY 2–3 events that truly move markets.
+From the news, identify ONLY ONE dominant theme that impacts global markets.
 
-STRICT RULES:
-- Ignore product launches, small company news, tech updates without macro impact
-- Ignore random corporate announcements
-- Focus ONLY on:
-  • Interest rates / inflation / Fed
-  • Oil / energy / commodities
-  • Geopolitics (wars, trade, sanctions)
-  • Large capital flows or policy changes
+Examples:
+- Oil / Middle East tension
+- Interest rates / inflation
+- AI / tech capital shift
+- Geopolitical risk
 
-If multiple news items exist → DISCARD weak ones
+RULES:
+- All selected points MUST relate to the SAME theme
+- If news is unrelated → IGNORE it completely
+- Do NOT mix biotech + AI + geopolitics
+
+Output ONE clear theme only.
 
 ---
 
@@ -190,40 +192,47 @@ A. 3 STRONG HOOKS
 
 B. 2 REEL SCRIPTS (1–2 MIN EACH)
 
+Write EXACTLY like someone speaking on camera.
+
 STRICT FORMAT:
 
-HOOK:
-Start with a bold, scroll-stopping statement
-
-EXPLANATION:
-Explain what happened simply
-
-CAUSE → EFFECT:
-Why this matters for markets
-
-US → INDIA LINK:
-Always connect both
-
-SMART INSIGHT:
-What people are missing / what smart money is doing
-
-CLOSING:
-Clear takeaway
+Script must be in spoken Hinglish/English tone.
 
 ---
 
-STRICT RULES:
+REEL 1:
 
-- Do NOT summarize all news
-- Do NOT mention more than 2–3 events
-- Do NOT use generic phrases like:
-  "markets may fluctuate"
-  "stay tuned"
-  "keep an eye on"
-- Avoid news-anchor tone
+HOOK:
+(1 strong opening line)
 
-Write like a sharp finance creator explaining insights confidently.
-"""---
+BODY:
+Explain step-by-step:
+- What happened
+- Why it matters
+- Impact on US markets
+- Impact on India
+
+INSIGHT:
+What most people are missing
+
+CLOSING:
+1 sharp takeaway
+
+---
+
+RULES:
+- Write in short spoken sentences
+- No titles, no descriptions
+- No “explore”, “dive into”
+- No narration tone
+- It should feel like I can directly read this in a reel
+
+---
+
+Example tone:
+
+“If oil prices go up from here, don’t just think petrol prices…  
+this actually changes inflation, Fed decisions, and even Indian markets…”"""---
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
