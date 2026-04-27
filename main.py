@@ -72,76 +72,110 @@ def fetch_market_data():
     return market_data
 
 def analyze_with_ai(news, market_data):
-   prompt = f"""
-You are a senior global macro analyst + content strategist.
+  prompt = f"""
+You are not a news summarizer. You are a macro strategist.
+
+You must think like:
+1. A hedge fund manager
+2. A macro economist
+3. A retail trader
+4. A long-term investor
 
 Analyze the following news deeply:
 
 {news_data}
 
-Your output must be detailed, structured, and insightful. Avoid generic statements.
+---
+
+STEP 1: FILTER SIGNAL FROM NOISE
+- Ignore irrelevant news
+- Pick only market-moving developments
+- Explain WHY they matter
 
 ---
 
-1. KEY NEWS SUMMARY (5–7 bullets)
-- Only important macro/market-moving updates
+STEP 2: WHAT IS DIFFERENT THIS TIME?
+- Compare with historical behavior
+- Is this normal or unusual?
+- What has changed vs past similar events?
 
 ---
 
-2. US MARKET IMPACT (DETAILED)
-- Which sectors are impacted and WHY
-- Mention specific companies (not just sectors)
-- Explain cause-effect clearly
+STEP 3: MARKET INTERPRETATION (DEEP)
+
+A. US MARKET
+- Which sectors move FIRST and WHY
+- Which companies specifically benefit/suffer
+- What smart money is likely doing RIGHT NOW
+
+B. INDIA MARKET (VERY IMPORTANT)
+- Impact via FPI flows, INR, global cues
+- Which Indian sectors/stocks get indirect impact
+- What usually happens vs what may happen now
 
 ---
 
-3. INDIA MARKET IMPACT (VERY IMPORTANT)
-- Sector impact
-- Specific stocks (Nifty/BSE names)
-- FPI flows, INR movement, RBI angle
+STEP 4: MULTI-ORDER EFFECTS
+
+- First-order (immediate reaction)
+- Second-order (next 1–2 weeks)
+- Third-order (structural shift)
 
 ---
 
-4. MULTI-LAYER IMPACT ANALYSIS
-- First-order impact (immediate)
-- Second-order impact (after few days/weeks)
-- Third-order impact (longer-term structural)
+STEP 5: ASSET CLASS ROTATION
 
----
-
-5. ASSET CLASS IMPACT
-Explain impact on:
+Impact on:
 - Equities
-- Bonds
+- Bonds (yields)
 - Gold
-- Crude Oil
-- USD Index
+- Oil
+- USD
 - Crypto
-- VIX
+- Volatility (VIX)
+
+Explain FLOW OF MONEY (where money moves)
 
 ---
 
-6. SENTIMENT SCORE
-Give a score from -5 to +5 and explain WHY
+STEP 6: CONTRARIAN VIEW
+
+- What could go WRONG in this narrative?
+- Where market might be overreacting
 
 ---
 
-7. ACTIONABLE INSIGHTS (VERY IMPORTANT)
-- What institutional investors might do
-- What retail investors might do
-- Any rotation signals (sector shift)
+STEP 7: CLEAR ACTIONABLE INSIGHTS
+
+- If you were a hedge fund, what would you do?
+- If you were a retail investor, what would you avoid?
 
 ---
 
-8. CONTENT ENGINE (HIGH QUALITY)
+STEP 8: CONTENT ENGINE (HIGH DEPTH)
 
 Give:
 
-A. 3 VIRAL HOOKS (strong, curiosity-driven)
-B. 2 FULL REEL SCRIPTS (at least 1-2 minutes each, conversational tone)
-C. 1 LONG-FORM VIDEO IDEA (with flow structure)
+1. 3 STRONG HOOKS (not clickbait, insight-driven)
 
-Make scripts engaging, not generic. Use storytelling, not bullet points.
+2. 2 REEL SCRIPTS (1–2 MINUTES EACH)
+- Conversational
+- Storytelling style
+- Explain cause → effect → impact
+- Include US + India linkage
+
+3. 1 LONG-FORM VIDEO STRUCTURE
+- Hook
+- Build-up
+- Insight
+- Conclusion
+
+---
+
+IMPORTANT:
+- Avoid generic statements
+- Avoid repeating news
+- Focus on reasoning, causality, and insight
 """
 
     response = client.chat.completions.create(
