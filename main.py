@@ -76,20 +76,24 @@ def analyze_with_ai(news, market_data):
     all_news = news
     filtered_news = []
 
-    keywords = [
-        "fed", "interest rate", "inflation",
-        "oil", "crude", "geopolitics",
-        "earnings", "acquisition", "ipo",
-        "ai", "technology", "china", "us",
-        "india", "bond", "yield"
-    ]
+ keywords = [
+    "iran", "oil", "crude", "hormuz",
+    "war", "attack", "geopolitics",
+    "fed", "inflation", "interest rate"
+]
 
-    for article in all_news:
-        title = str(article).lower()
-        if any(k in title for k in keywords):
-            filtered_news.append(title)
+for article in all_news:
+    title = str(article).lower()
+    
+    # only keep strong macro signals
+    if any(k in title for k in keywords):
+        filtered_news.append(title)
 
-    news_data = "\n".join(filtered_news[:10])
+# remove duplicates
+filtered_news = list(set(filtered_news))
+
+# 🚨 HARD LIMIT
+news_data = "\n".join(filtered_news[:3])
 
   prompt = f"""
 You are a macro analyst.
@@ -143,49 +147,55 @@ ANALYSIS:
 
 STEP 4: REEL SCRIPTS
 
-Write EXACTLY 2 scripts.
+REEL SCRIPTS (IMPORTANT):
 
-Each script must be written like spoken content.
+Write like I am speaking on camera.
 
-NO titles. NO captions.
+No titles. No descriptions. No formal tone.
 
 ---
 
 SCRIPT 1:
 
-"Hook line.
+"Listen, if this Iran situation escalates, don’t just think about war.
 
-Simple explanation of what happened.
+The real impact is oil.
 
-Why it matters for US markets.
+If oil prices go up, inflation in the US goes up again.
 
-What it means for India.
+That means Fed will delay rate cuts.
 
-One smart insight.
+And when that happens, markets don’t like it.
 
-One clear closing takeaway."
+Now for India, it’s even bigger.
+
+We import oil, so higher crude means pressure on INR and markets.
+
+So smart money is watching oil, not headlines.
+
+That’s the real signal here."
 
 ---
 
 SCRIPT 2:
 
-(same format, different angle of same theme)
+"Everyone is focusing on the conflict itself.
 
----
+But the bigger story is supply disruption.
 
-STRICT RULES:
+If shipping through Hormuz gets affected, oil supply tightens.
 
-- Use ONLY the given NEWS
-- Do NOT add outside topics
-- Do NOT mention XRP, Taiwan, or anything not in NEWS
-- Do NOT write like a news anchor
-- Do NOT use phrases like:
-  "stay tuned"
-  "markets may fluctuate"
-  "keep an eye"
+That pushes global prices up.
 
-Write like explaining to a friend.
+US markets react through inflation fears.
 
+India reacts through currency pressure.
+
+So if you’re investing, don’t track the war.
+
+Track oil prices.
+
+That’s where the real opportunity is."
 """---
 
     response = client.chat.completions.create(
