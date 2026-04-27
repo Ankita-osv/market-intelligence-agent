@@ -91,140 +91,139 @@ def analyze_with_ai(news, market_data):
 
     news_data = "\n".join(filtered_news[:10])
 
-  prompt = f"""
-You are not a news summarizer. You are a macro strategist.
+  prompt = prompt = f"""
+You are a global macro strategist and content creator.
 
-You must think like:
-1. A hedge fund manager
-2. A macro economist
-3. A retail trader
-4. A long-term investor
+Your job is NOT to summarize news.
+Your job is to extract SIGNAL from NOISE and explain market impact.
 
-Analyze the following news deeply:
+---
 
+INPUT:
+
+NEWS:
 {news_data}
 
----
-
-STEP 1: FILTER SIGNAL FROM NOISE
-- Ignore irrelevant news
-- Pick only market-moving developments
-- Explain WHY they matter
+MARKET DATA:
+{market_data}
 
 ---
 
-STEP 2: WHAT IS DIFFERENT THIS TIME?
-- Compare with historical behavior
-- Is this normal or unusual?
-- What has changed vs past similar events?
+STEP 1: FILTER NEWS
+
+From the input, SELECT ONLY 2–3 events that truly move markets.
+
+STRICT RULES:
+- Ignore product launches, small company news, tech updates without macro impact
+- Ignore random corporate announcements
+- Focus ONLY on:
+  • Interest rates / inflation / Fed
+  • Oil / energy / commodities
+  • Geopolitics (wars, trade, sanctions)
+  • Large capital flows or policy changes
+
+If multiple news items exist → DISCARD weak ones
 
 ---
 
-STEP 3: MARKET INTERPRETATION (DEEP)
+STEP 2: DEEP ANALYSIS
 
-A. US MARKET
-- Which sectors move FIRST and WHY
-- Which companies specifically benefit/suffer
-- What smart money is likely doing RIGHT NOW
+For EACH selected event:
 
-B. INDIA MARKET (VERY IMPORTANT)
-- Impact via FPI flows, INR, global cues
-- Which Indian sectors/stocks get indirect impact
-- What usually happens vs what may happen now
+- What happened? (1 line)
+- Why does it matter?
+- What changes vs expectations?
+- Market reaction path:
+  Event → Asset → Sector → Stocks
 
 ---
 
-STEP 4: MULTI-ORDER EFFECTS
+STEP 3: GLOBAL LINKAGE
 
-- First-order (immediate reaction)
-- Second-order (next 1–2 weeks)
-- Third-order (structural shift)
+Explain clearly:
 
----
-
-STEP 5: ASSET CLASS ROTATION
-
-Impact on:
-- Equities
-- Bonds (yields)
-- Gold
-- Oil
-- USD
-- Crypto
-- Volatility (VIX)
-
-Explain FLOW OF MONEY (where money moves)
+- US market impact (specific sectors + companies)
+- India market impact (FPI, INR, sectors, companies)
 
 ---
 
-STEP 6: CONTRARIAN VIEW
+STEP 4: MULTI-LAYER IMPACT
 
-- What could go WRONG in this narrative?
-- Where market might be overreacting
-
----
-
-STEP 7: CLEAR ACTIONABLE INSIGHTS
-
-- If you were a hedge fund, what would you do?
-- If you were a retail investor, what would you avoid?
+Break into:
+- Immediate impact
+- Short-term (days/weeks)
+- Structural (long-term)
 
 ---
 
-STEP 8: CONTENT ENGINE (HIGH DEPTH)
+STEP 5: MONEY FLOW
 
-Give:
-
-1. 3 STRONG HOOKS (not clickbait, insight-driven)
-
-2. 2 REEL SCRIPTS (1–2 MINUTES EACH)
-B. 2 HIGH-QUALITY REEL SCRIPTS (1–2 MIN EACH)
-
-Each reel MUST follow this structure:
-
-1. HOOK (first 2–3 seconds)
-- Bold, surprising, scroll-stopping
-
-2. EXPLANATION
-- Break down what happened in simple terms
-
-3. CAUSE → EFFECT
-- Explain WHY it matters
-- Connect macro → markets → sectors
-
-4. US → INDIA LINK
-- Always explain impact on Indian markets
-
-5. SMART INSIGHT
-- What smart money / institutions will do
-
-6. ACTIONABLE CLOSE
-- What should viewer watch / think / do
+Where is capital moving?
+What will smart money (institutions) do?
 
 ---
 
-TONE:
-- Conversational (like explaining to a friend)
-- Confident, sharp
-- No news-anchor language
-- No phrases like “stay tuned”, “markets may fluctuate”
+STEP 6: FINAL OUTPUT FORMAT
+
+1. KEY EVENTS (max 2–3, deeply explained)
+
+2. US MARKET IMPACT
+(mention sectors + example companies)
+
+3. INDIA MARKET IMPACT
+(include INR, FPI, sectors, stocks)
+
+4. MULTI-LAYER IMPACT
+
+5. WHERE MONEY IS FLOWING
+
+6. ACTIONABLE INSIGHTS
+(what should someone watch or do)
 
 ---
 
-This should feel like a finance creator explaining markets, not a reporter reading news.
-3. 1 LONG-FORM VIDEO STRUCTURE
-- Hook
-- Build-up
-- Insight
-- Conclusion
+7. CONTENT CREATION
+
+A. 3 STRONG HOOKS
 
 ---
 
-IMPORTANT:
-- Avoid generic statements
-- Avoid repeating news
-- Focus on reasoning, causality, and insight
-"""
+B. 2 REEL SCRIPTS (1–2 MIN EACH)
+
+STRICT FORMAT:
+
+HOOK:
+Start with a bold, scroll-stopping statement
+
+EXPLANATION:
+Explain what happened simply
+
+CAUSE → EFFECT:
+Why this matters for markets
+
+US → INDIA LINK:
+Always connect both
+
+SMART INSIGHT:
+What people are missing / what smart money is doing
+
+CLOSING:
+Clear takeaway
+
+---
+
+STRICT RULES:
+
+- Do NOT summarize all news
+- Do NOT mention more than 2–3 events
+- Do NOT use generic phrases like:
+  "markets may fluctuate"
+  "stay tuned"
+  "keep an eye on"
+- Avoid news-anchor tone
+
+Write like a sharp finance creator explaining insights confidently.
+"""---
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
