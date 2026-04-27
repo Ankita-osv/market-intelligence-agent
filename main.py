@@ -92,10 +92,10 @@ def analyze_with_ai(news, market_data):
     news_data = "\n".join(filtered_news[:10])
 
   prompt = prompt = f"""
-You are a global macro strategist and content creator.
+You are a global macro analyst and content creator.
 
 Your job is NOT to summarize news.
-Your job is to extract SIGNAL from NOISE and explain market impact.
+Your job is to extract ONE strong market insight.
 
 ---
 
@@ -109,133 +109,77 @@ MARKET DATA:
 
 ---
 
-STEP 1: IDENTIFY ONE DOMINANT MACRO THEME
+STEP 1: FIND ONE DOMINANT THEME
 
-From the news, identify ONLY ONE dominant theme that impacts global markets.
-
+Pick ONLY ONE theme that impacts markets.
 Examples:
-- Oil / Middle East tension
+- Oil / geopolitics
 - Interest rates / inflation
-- AI / tech capital shift
-- Geopolitical risk
+- Capital flows
 
-RULES:
-- All selected points MUST relate to the SAME theme
-- If news is unrelated → IGNORE it completely
-- Do NOT mix biotech + AI + geopolitics
-
-Output ONE clear theme only.
+Ignore all unrelated news.
 
 ---
 
-STEP 2: DEEP ANALYSIS
+STEP 2: BUILD A CLEAR LOGIC
 
-For EACH selected event:
+Explain:
 
-- What happened? (1 line)
-- Why does it matter?
-- What changes vs expectations?
-- Market reaction path:
-  Event → Asset → Sector → Stocks
-
----
-
-STEP 3: GLOBAL LINKAGE
-
-Explain clearly:
-
-- US market impact (specific sectors + companies)
-- India market impact (FPI, INR, sectors, companies)
-
----
-
-STEP 4: MULTI-LAYER IMPACT
-
-Break into:
-- Immediate impact
-- Short-term (days/weeks)
-- Structural (long-term)
-
----
-
-STEP 5: MONEY FLOW
-
-Where is capital moving?
-What will smart money (institutions) do?
-
----
-
-STEP 6: FINAL OUTPUT FORMAT
-
-1. KEY EVENTS (max 2–3, deeply explained)
-
-2. US MARKET IMPACT
-(mention sectors + example companies)
-
-3. INDIA MARKET IMPACT
-(include INR, FPI, sectors, stocks)
-
-4. MULTI-LAYER IMPACT
-
-5. WHERE MONEY IS FLOWING
-
-6. ACTIONABLE INSIGHTS
-(what should someone watch or do)
-
----
-
-7. CONTENT CREATION
-
-A. 3 STRONG HOOKS
-
----
-
-B. 2 REEL SCRIPTS (1–2 MIN EACH)
-
-Write EXACTLY like someone speaking on camera.
-
-STRICT FORMAT:
-
-Script must be in spoken Hinglish/English tone.
-
----
-
-REEL 1:
-
-HOOK:
-(1 strong opening line)
-
-BODY:
-Explain step-by-step:
-- What happened
+- What happened (simple)
 - Why it matters
 - Impact on US markets
-- Impact on India
+- Impact on India markets
+- What smart money will do
+
+---
+
+STEP 3: OUTPUT FORMAT
+
+1. THEME
+2. US IMPACT
+3. INDIA IMPACT
+4. MONEY FLOW
+5. ACTIONABLE INSIGHT
+
+---
+
+STEP 4: REEL CONTENT
+
+Write 2 FULL REEL SCRIPTS (1–2 min each)
+
+STRICT RULES:
+
+- Write like speaking on camera
+- Use simple conversational tone
+- No titles, no captions
+- No “explore”, “stay tuned”, “markets may fluctuate”
+
+---
+
+STRUCTURE:
+
+HOOK:
+Strong opening line
+
+BODY:
+Explain clearly step-by-step
 
 INSIGHT:
 What most people are missing
 
 CLOSING:
-1 sharp takeaway
+Clear takeaway
 
 ---
 
-RULES:
-- Write in short spoken sentences
-- No titles, no descriptions
-- No “explore”, “dive into”
-- No narration tone
-- It should feel like I can directly read this in a reel
-
----
-
-Example tone:
-
-“If oil prices go up from here, don’t just think petrol prices…  
-this actually changes inflation, Fed decisions, and even Indian markets…”"""---
+IMPORTANT:
+- Stick ONLY to given news
+- Do NOT introduce outside topics
+- Focus on ONE idea only
+"""---
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         messages=[
             {"role": "user", "content": prompt}
         ]
