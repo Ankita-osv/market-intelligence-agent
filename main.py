@@ -91,11 +91,10 @@ def analyze_with_ai(news, market_data):
 
     news_data = "\n".join(filtered_news[:10])
 
-  prompt = prompt = f"""
-You are a global macro analyst and content creator.
+  prompt = f"""
+You are a macro analyst.
 
-Your job is NOT to summarize news.
-Your job is to extract ONE strong market insight.
+You must follow instructions EXACTLY.
 
 ---
 
@@ -109,73 +108,84 @@ MARKET DATA:
 
 ---
 
-STEP 1: FIND ONE DOMINANT THEME
+STEP 1: SELECT ONE THEME
 
-Pick ONLY ONE theme that impacts markets.
-Examples:
-- Oil / geopolitics
-- Interest rates / inflation
-- Capital flows
+From the NEWS, choose ONLY ONE dominant theme.
 
-Ignore all unrelated news.
+RULES:
+- All output must be based on this ONE theme
+- Ignore all unrelated news
+- Do not mix multiple topics
 
 ---
 
-STEP 2: BUILD A CLEAR LOGIC
+STEP 2: ANALYSIS
 
-Explain:
+Explain clearly:
 
-- What happened (simple)
+- What happened
 - Why it matters
-- Impact on US markets
-- Impact on India markets
-- What smart money will do
+- Impact on US markets (specific sectors)
+- Impact on India markets (INR, sectors)
+- Where money will flow
 
 ---
 
 STEP 3: OUTPUT FORMAT
 
-1. THEME
-2. US IMPACT
-3. INDIA IMPACT
-4. MONEY FLOW
-5. ACTIONABLE INSIGHT
+THEME:
+(one line)
+
+ANALYSIS:
+(5–6 lines, clear cause → effect)
 
 ---
 
-STEP 4: REEL CONTENT
+STEP 4: REEL SCRIPTS
 
-Write 2 FULL REEL SCRIPTS (1–2 min each)
+Write EXACTLY 2 scripts.
+
+Each script must be written like spoken content.
+
+NO titles. NO captions.
+
+---
+
+SCRIPT 1:
+
+"Hook line.
+
+Simple explanation of what happened.
+
+Why it matters for US markets.
+
+What it means for India.
+
+One smart insight.
+
+One clear closing takeaway."
+
+---
+
+SCRIPT 2:
+
+(same format, different angle of same theme)
+
+---
 
 STRICT RULES:
 
-- Write like speaking on camera
-- Use simple conversational tone
-- No titles, no captions
-- No “explore”, “stay tuned”, “markets may fluctuate”
+- Use ONLY the given NEWS
+- Do NOT add outside topics
+- Do NOT mention XRP, Taiwan, or anything not in NEWS
+- Do NOT write like a news anchor
+- Do NOT use phrases like:
+  "stay tuned"
+  "markets may fluctuate"
+  "keep an eye"
 
----
+Write like explaining to a friend.
 
-STRUCTURE:
-
-HOOK:
-Strong opening line
-
-BODY:
-Explain clearly step-by-step
-
-INSIGHT:
-What most people are missing
-
-CLOSING:
-Clear takeaway
-
----
-
-IMPORTANT:
-- Stick ONLY to given news
-- Do NOT introduce outside topics
-- Focus on ONE idea only
 """---
 
     response = client.chat.completions.create(
