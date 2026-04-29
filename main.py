@@ -7,6 +7,9 @@ from email.mime.text import MIMEText
 from datetime import datetime
 
 import os
+from dotenv import load_dotenv
+from openai import OpenAI
+load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
@@ -72,37 +75,50 @@ def fetch_market_data():
     return market_data
 
 def analyze_with_ai(news, market_data):
-     # 🔽 FILTERING
+
+    # 🔽 FILTERING (FIXED INDENTATION)
     all_news = news
     filtered_news = []
 
- keywords = [
-    "iran", "oil", "crude", "hormuz",
-    "war", "attack", "geopolitics",
-    "fed", "inflation", "interest rate"
-]
+    keywords = [
+        "iran", "oil", "crude", "hormuz",
+        "war", "attack", "geopolitics",
+        "fed", "inflation", "interest rate"
+    ]
 
-for article in all_news:
-    title = str(article).lower()
-    
-    # only keep strong macro signals
-    if any(k in title for k in keywords):
-        filtered_news.append(title)
+    for article in all_news:
+        title = str(article).lower()
+        if any(k in title for k in keywords):
+            filtered_news.append(title)
 
-# remove duplicates
-filtered_news = list(set(filtered_news))
+    # remove duplicates
+    filtered_news = list(set(filtered_news))
+    # 🚨 remove weak / noisy headlines
+    filtered_news = [
+    t for t in filtered_news
+    if len(t) > 40   # removes short junk headlines
+]   
 
-# 🚨 HARD LIMIT
-news_data = "\n".join(filtered_news[:3])
+    # 🚨 HARD LIMIT (very important)
+    news_data = "\n".join(filtered_news[:3])
 
-  prompt = f"""
-You are a macro analyst.
+    # 🔍 DEBUG (add this)
+    print("DEBUG NEWS DATA:\n", news_data)
 
-You must follow instructions EXACTLY.
+    # 🔽 PROMPT
+    prompt = f"""
+You are a global macro strategist and finance content creator.
+
+Your task is NOT to summarize news.
+
+Your task is to CONNECT the news into one powerful market narrative.
+
+You must think like:
+- a hedge fund analyst
+- a macro investor
+- a finance YouTube creator
 
 ---
-
-INPUT:
 
 NEWS:
 {news_data}
@@ -112,99 +128,119 @@ MARKET DATA:
 
 ---
 
-STEP 1: SELECT ONE THEME
+STEP 1: IDENTIFY THE CORE STORY
 
-From the NEWS, choose ONLY ONE dominant theme.
+Identify the SINGLE biggest narrative connecting:
+- geopolitics
+- AI / technology
+- economy
+- markets
 
-RULES:
-- All output must be based on this ONE theme
-- Ignore all unrelated news
-- Do not mix multiple topics
+Do NOT discuss unrelated stories separately.
 
----
-
-STEP 2: ANALYSIS
-
-Explain clearly:
-
-- What happened
-- Why it matters
-- Impact on US markets (specific sectors)
-- Impact on India markets (INR, sectors)
-- Where money will flow
+Connect them into ONE big picture.
 
 ---
 
-STEP 3: OUTPUT FORMAT
+STEP 2: EXPLAIN THE REAL INSIGHT
 
-THEME:
-(one line)
+Explain:
+- what is happening
+- why it matters
+- what changed compared to before
+- what second-order effects may happen next
+- where institutional money may flow
 
-ANALYSIS:
-(5–6 lines, clear cause → effect)
-
----
-
-STEP 4: REEL SCRIPTS
-
-REEL SCRIPTS (IMPORTANT):
-
-Write like I am speaking on camera.
-
-No titles. No descriptions. No formal tone.
-
----
-
-SCRIPT 1:
-
-"Listen, if this Iran situation escalates, don’t just think about war.
-
-The real impact is oil.
-
-If oil prices go up, inflation in the US goes up again.
-
-That means Fed will delay rate cuts.
-
-And when that happens, markets don’t like it.
-
-Now for India, it’s even bigger.
-
-We import oil, so higher crude means pressure on INR and markets.
-
-So smart money is watching oil, not headlines.
-
-That’s the real signal here."
+Focus heavily on:
+- US markets
+- India markets
+- sectors
+- currencies
+- AI economy
+- rates
+- oil
+- tech infrastructure
 
 ---
 
-SCRIPT 2:
+STEP 3: MARKET IMPACT
 
-"Everyone is focusing on the conflict itself.
+Explain:
+- US market impact
+- India market impact
+- sectors that benefit
+- sectors at risk
+- stock watchlist ideas
 
-But the bigger story is supply disruption.
+---
 
-If shipping through Hormuz gets affected, oil supply tightens.
+STEP 4: WHAT MOST PEOPLE ARE MISSING
 
-That pushes global prices up.
+Explain:
+- what retail investors are not noticing
+- what smart money is likely doing
+- hidden implications
 
-US markets react through inflation fears.
+---
 
-India reacts through currency pressure.
+STEP 5: CONTENT CREATOR MODE
 
-So if you’re investing, don’t track the war.
+Now switch into finance creator mode.
 
-Track oil prices.
+Do NOT sound like a research report.
 
-That’s where the real opportunity is."
-"""---
+Sound like:
+- a sharp macro creator
+- someone explaining hidden market signals
+- conversational but intelligent
+
+Avoid:
+- textbook explanations
+- boring summaries
+- generic advice
+
+---
+
+OUTPUT FORMAT:
+
+1. BIGGEST INSIGHT OF THE DAY
+
+2. WHAT MOST PEOPLE ARE MISSING
+
+3. SMART MONEY POSITIONING
+
+4. US vs INDIA IMPACT
+
+5. 3 VIRAL VIDEO HOOKS
+
+Hooks should feel like:
+- "Everyone thinks..."
+- "But the real story is..."
+- "Nobody is noticing..."
+- "This changes everything because..."
+
+---
+
+6. 2 FULL REEL SCRIPTS
+
+IMPORTANT:
+- 400–500 words EACH
+- Speak like I am talking on camera
+- Conversational
+- Insight-heavy
+- Explain cause → effect → market impact
+- Connect geopolitics + AI + economy together
+- Strong hook in first 2 lines
+- Deep but simple
+"""
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=[{"role": "user", "content": prompt}]
     )
-    return response.choices[0].message.content  # Add return
+
+
+    return response.choices[0].message.content
 
 def send_email(content):
     sender_email = "ankitasethi333@gmail.com"
