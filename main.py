@@ -75,34 +75,19 @@ def fetch_market_data():
     return market_data
 
 def analyze_with_ai(news, market_data):
-
-    # 🔽 FILTERING (FIXED INDENTATION)
+    # ✅ CLEAN NEWS (simple + powerful)
     all_news = news
-    filtered_news = []
 
-    keywords = [
-        "iran", "oil", "crude", "hormuz",
-        "war", "attack", "geopolitics",
-        "fed", "inflation", "interest rate"
-    ]
+    # convert everything to text
+    clean_news = [str(article).lower() for article in all_news]
 
-    for article in all_news:
-        title = str(article).lower()
-        if any(k in title for k in keywords):
-            filtered_news.append(title)
+    # remove duplicates (optional but good)
+    clean_news = list(set(clean_news))
 
-    # remove duplicates
-    filtered_news = list(set(filtered_news))
-    # 🚨 remove weak / noisy headlines
-    filtered_news = [
-    t for t in filtered_news
-    if len(t) > 40   # removes short junk headlines
-]   
+    # take top 8 headlines (important)
+    news_data = "\n".join(clean_news[:8])
 
-    # 🚨 HARD LIMIT (very important)
-    news_data = "\n".join(filtered_news[:3])
-
-    # 🔍 DEBUG (add this)
+    # debug print (keep this for now)
     print("DEBUG NEWS DATA:\n", news_data)
 
     # 🔽 PROMPT
