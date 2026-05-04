@@ -8,7 +8,9 @@ import yfinance as yf
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
-
+from agents.news_fetcher import fetch_market_news
+from agents.signal_filter import filter_market_news, run_signal_filter
+from agents.narrative_engine import detect_dominant_narratives
 from agents.macro_agent import run_macro_agent
 from agents.sector_agent import run_sector_agent
 from agents.stock_agent import run_stock_agent
@@ -20,67 +22,7 @@ from agents.memory_agent import (
 )
 from agents.confidence_agent import run_confidence_agent
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-def fetch_newsapi():
-    url = "https://newsapi.org/v2/everything"
-    params = {
-        "q": "US economy OR Federal Reserve OR inflation OR stock market",
-        "language": "en",
-        "sortBy": "publishedAt",
-        "pageSize": 10,
-        "apiKey": NEWS_API_KEY
-    }
-
-    response = requests.get(url, params=params)
-    
-    print("NewsAPI status:", response.status_code)  # DEBUG
-    
-    data = response.json()
-
-    articles = []
-    for article in data.get("articles", []):
-        articles.append(article["title"])
-
-    return articles
-
-
-def fetch_rss():
-    feeds = [
-        "http://feeds.reuters.com/reuters/businessNews",
-        "https://www.cnbc.com/id/100003114/device/rss/rss.html"
-    ]
-
-    headlines = []
-
-    for feed in feeds:
-        parsed = feedparser.parse(feed)
-        for entry in parsed.entries[:5]:
-            headlines.append(entry.title)
-
-    return headlines
-
-def fetch_market_data():
-    tickers = {
-        "S&P 500": "^GSPC",
-        "Nasdaq": "^IXIC",
-        "Gold": "GC=F",
-        "Oil": "CL=F",
-        "USD/INR": "INR=X"
-    }
-
-    market_data = {}
-
-    for name, ticker in tickers.items():
-        data = yf.Ticker(ticker)
-        hist = data.history(period="1d")
-
-        if not hist.empty:
-            price = hist["Close"].iloc[-1]
-            market_data[name] = round(price, 2)
-        else:
-            market_data[name] = "N/A"
-
-    return market_data
-
+#
 # def analyze_with_ai(news, market_data):
 #     # ✅ CLEAN NEWS (simple + powerful)
 #     all_news = news
@@ -240,7 +182,7 @@ def send_email(content):
     app_password = "qtmg kxdr dqyz fxgw"
 
     msg = MIMEText(content)
-    msg["Subject"] = "📊 Daily Market Intelligence"
+    msg["Subject"] = "Daily Market Intelligence"
     msg["From"] = sender_email
     msg["To"] = receiver_email
 
@@ -248,11 +190,11 @@ def send_email(content):
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
             server.login(sender_email, app_password)
             server.send_message(msg)
-        print("\n📧 Email sent successfully!")
+        print("\nEmail sent successfully!")
     except TimeoutError:
-        print("\n⚠️ Email failed: Gmail SMTP connection timed out. Check your internet connection.")
+        print("\nEmail failed: Gmail SMTP connection timed out. Check your internet connection.")
     except Exception as e:
-        print(f"\n⚠️ Email failed: {str(e)}")
+        print(f"\nEmail failed: {str(e)}")
 
 def save_analysis_to_file(content):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -260,35 +202,89 @@ def save_analysis_to_file(content):
     try:
         with open(filename, "w", encoding="utf-8") as f:
             f.write(content)
-        print(f"✅ Analysis saved to {filename}")
+        print(f"Analysis saved to {filename}")
         return filename
     except Exception as e:
-        print(f"⚠️ Failed to save analysis: {str(e)}")
+        print(f"Failed to save analysis: {str(e)}")
+
+def fetch_market_data():
+    """Fetch current market data for key indices and commodities"""
+    try:
+        # Define tickers
+        tickers = {
+            "S&P 500": "^GSPC",
+            "Nasdaq": "^IXIC", 
+            "Gold": "GC=F",
+            "Oil": "CL=F",
+            "USD/INR": "INR=X"
+        }
+        
+        market_data = {}
+        for name, ticker in tickers.items():
+            try:
+                stock = yf.Ticker(ticker)
+                # Get the most recent closing price
+                hist = stock.history(period="1d")
+                if not hist.empty:
+                    price = hist['Close'].iloc[-1]
+                    market_data[name] = round(price, 2)
+                else:
+                    market_data[name] = "N/A"
+            except Exception as e:
+                market_data[name] = f"Error: {str(e)}"
+        
+        return market_data
+    except Exception as e:
+        print(f"Failed to fetch market data: {str(e)}")
+        return {
+            "S&P 500": "N/A",
+            "Nasdaq": "N/A", 
+            "Gold": "N/A",
+            "Oil": "N/A",
+            "USD/INR": "N/A"
+        }
 
 def main():
    
-    print("🚀 Script started")
+    print("Script started")
 
-    newsapi_news = fetch_newsapi()
-    rss_news = fetch_rss()
+    all_news = fetch_market_news()
 
-    all_news = newsapi_news + rss_news
-    unique_news = list(set(all_news))
+    unique_news = list(set([item["title"] for item in all_news]))
+    # FILTER IMPORTANT MARKET NEWS
+
+    filtered_news = filter_market_news(all_news)
+
+    filtered_headlines = [
+        item["title"]
+        for item in filtered_news
+    ]
+    
+    dominant_narratives = detect_dominant_narratives(filtered_headlines)
+
+    print("\n🔥 DOMINANT MARKET NARRATIVES:\n")
+    print(dominant_narratives)
+
+    signal_analysis = run_signal_filter(filtered_headlines)  
+    print("\nSIGNAL FILTER OUTPUT:\n")
+    print(signal_analysis)  
+
 
     market_data = fetch_market_data()
     recent_memory = load_recent_memories()
 
-    print("\n📰 Collected News:\n")
-    for i, news in enumerate(unique_news, 1):
+    print("\nCollected News:\n")
+    for i, news in enumerate(filtered_headlines, 1):
         print(f"{i}. {news}")
 
-    print("\n📊 Market Snapshot:\n")
+    print("\nMarket Snapshot:\n")
     for key, value in market_data.items():
         print(f"{key}: {value}")
 
     macro_analysis = run_macro_agent(
-        unique_news,
+        signal_analysis,
         market_data,
+        dominant_narratives,
         recent_memory
     )
     sector_analysis = run_sector_agent(macro_analysis, market_data)
@@ -296,33 +292,33 @@ def main():
     contrarian_analysis = run_contrarian_agent(
         macro_analysis,
         sector_analysis,
-        stock_analysis
+        stock_analysis,
     )
     confidence_analysis = run_confidence_agent(
         macro_analysis,
         sector_analysis,
         stock_analysis,
-        contrarian_analysis
+        contrarian_analysis,
     )
     creator_content = run_creator_agent(
         macro_analysis,
         sector_analysis,
         stock_analysis,
         contrarian_analysis,
-        confidence_analysis
+        confidence_analysis,
     )
 
-    print("\n🌍 MACRO AGENT OUTPUT:\n")
+    print("\nMACRO AGENT OUTPUT:\n")
     print(macro_analysis)
-    print("\n📈 SECTOR AGENT OUTPUT:\n")
+    print("\nSECTOR AGENT OUTPUT:\n")
     print(sector_analysis)
-    print("\n🏢 STOCK AGENT OUTPUT:\n")
+    print("\nSTOCK AGENT OUTPUT:\n")
     print(stock_analysis)
-    print("\n🎬 CREATOR SCRIPT OUTPUT:\n")
+    print("\nCREATOR SCRIPT OUTPUT:\n")
     print(creator_content)
-    print("\n⚠️ CONTRARIAN AGENT OUTPUT:\n")
+    print("\nCONTRARIAN AGENT OUTPUT:\n")
     print(contrarian_analysis)
-    print("\n📊 CONFIDENCE AGENT OUTPUT:\n")
+    print("\nCONFIDENCE AGENT OUTPUT:\n")
     print(confidence_analysis)
 
     final_output = f"""

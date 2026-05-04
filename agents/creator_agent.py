@@ -15,6 +15,8 @@ def run_creator_agent(
     sector_analysis,
     stock_analysis,
     contrarian_analysis,
+    confidence_analysis,
+    *args
 ):
 
     prompt = f"""
@@ -61,6 +63,9 @@ STOCK ANALYSIS:
 CONTRARIAN ANALYSIS:
 {contrarian_analysis}   
 
+CONFIDENCE ANALYSIS:
+{confidence_analysis}
+
 IMPORTANT:
 
 Create:
@@ -68,17 +73,94 @@ Create:
 2. TWO LONG VIDEO SCRIPT (~1200-1500 words)
 
 For BOTH:
-- start with a strong hook
-- connect geopolitics + economy + AI + markets
-- explain cause and effect
-- mention sectors and stocks naturally
-- explain where smart money may flow
-- include India implications
-- include contrarian thinking
-- avoid generic motivation-style content
+IMPORTANT CREATOR BEHAVIOR:
+
+* Speak like a smart finance creator talking naturally to camera.
+* Build curiosity every few lines.
+* Introduce tension, contradiction, or hidden implications frequently.
+* Focus on what markets are REALLY reacting to.
+* Prioritize psychology over explanation.
+* Sound like you are decoding hidden market behavior.
+* Use shorter sentences.
+* Leave some thoughts intentionally incomplete for curiosity.
+* Occasionally use punchy one-line observations.
+* Avoid sounding perfectly polished.
+* Sound slightly opinionated.
+* Make viewers feel like they are getting an edge.
+* Focus on:
+
+  * hidden narratives
+  * institutional behavior
+  * second-order effects
+  * crowded trades
+  * market psychology
+  * “what people are missing”
 
 VERY IMPORTANT:
-Do NOT sound AI-generated.
+
+PriVERY IMPORTANT HUMAN DELIVERY STYLE:
+
+* Do NOT sound like a presenter or educator.
+* Do NOT sound like a finance news anchor.
+* Avoid formal introductions.
+* Start immediately with tension or curiosity.
+* Sound like someone thinking out loud intelligently.
+* Slightly interrupt your own thoughts sometimes.
+* Use dramatic short observations occasionally.
+* Avoid clean textbook transitions.
+* Sentences should vary in length naturally.
+* Occasionally use very short punchy lines.
+* Create “wait… what?” moments.
+* Sound emotionally aware of market tension.
+* Do NOT try to explain every detail perfectly.
+* Prioritize retention over completeness.
+* Make scripts feel spoken, not written.
+* Avoid phrases like:
+
+  * “let’s talk about”
+  * “in today’s video”
+  * “hello investors”
+  * “welcome back”
+  * “happy investing”
+
+GOOD STYLE EXAMPLES:
+
+* “Everyone’s focused on the war. Markets aren’t.”
+* “This is where things start getting dangerous.”
+* “And honestly? That changes the entire setup.”
+* “Most people still think this is temporary.”
+* “But smart money is already rotating.”
+* “That’s the part nobody’s pricing yet.”
+
+BAD STYLE EXAMPLES:
+
+* “Today we will discuss…”
+* “Oil prices are increasing due to…”
+* “Investors should consider…”
+* “As we can see from the market…”
+
+
+Extremely important:
+
+HOOK STYLE:
+
+Good hooks:
+
+* “Everyone thinks this is about oil. It’s not.”
+* “Markets are quietly starting to fear something bigger.”
+* “This one data point may completely change the market setup.”
+* “The real story isn’t the war. It’s what smart money is doing.”
+* “People are still bullish tech. But markets may already be rotating.”
+
+Bad hooks:
+
+* “Today we will discuss market trends…”
+* “Oil prices are increasing because…”
+* “The economy is facing inflationary pressure…”
+
+
+
+
 
 Avoid:
 - bullet-point style narration

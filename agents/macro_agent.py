@@ -10,9 +10,12 @@ if api_key:
 else:
     client = None
 
-def run_macro_agent(news, market_data):
+def run_macro_agent(signal_analysis, market_data, dominant_narratives, recent_memory=None):
     if not client:
         return "Error: OPENAI_API_KEY not set in environment"
+
+    recent_memory = recent_memory or "No recent memory available."
+    dominant_narratives = dominant_narratives or []
 
     prompt = f"""
 You are a senior global macro strategist.
@@ -29,11 +32,17 @@ Focus on:
 - currencies
 - global capital flows
 
-NEWS:
-{news}
+SIGNAL FILTER OUTPUT:
+{signal_analysis}
 
 MARKET DATA:
 {market_data}
+
+DOMINANT NARRATIVES:
+{dominant_narratives}
+
+RECENT MEMORY:
+{recent_memory}
 
 IMPORTANT:
 - Think like a hedge fund macro analyst
