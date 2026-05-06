@@ -1,139 +1,120 @@
-import os
+
 import requests
-
-from datetime import datetime
+import feedparser
+import os
 from dotenv import load_dotenv
-
-# LOAD ENV VARIABLES
+from datetime import datetime
+from agents.twitter_signals import fetch_twitter_signals
 load_dotenv()
 
-# NEWS API CONFIG
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
-URL = "https://newsapi.org/v2/everything"
 
-# SOURCE QUALITY WEIGHTS
-SOURCE_WEIGHTS = {
-    "Reuters": 5,
-    "Bloomberg": 5,
-    "Financial Times": 5,
-    "Wall Street Journal": 4,
-    "CNBC": 4,
-    "Economic Times": 4,
-    "Moneycontrol": 4,
-    "Twitter": 3,
-    "Unknown": 1
-}
+# -----------------------------------
+# STANDARD ARTICLE STRUCTURE
+# -----------------------------------
 
-
-# GET SOURCE SCORE
-def get_source_score(source):
-
-    return SOURCE_WEIGHTS.get(source, 1)
-
-
-# STRUCTURE ARTICLE
-def structure_article(
-    title,
-    summary,
-    source,
-    published,
-    url,
-    category="general"
-):
+def structure_article(title, summary, source, published, url):
 
     return {
-
         "title": title,
-
         "summary": summary,
-
         "source": source,
-
-        "source_score": get_source_score(source),
-
         "published": published,
-
-        "url": url,
-
-        "category": category,
-
-        "fetched_at": datetime.now().isoformat()
+        "url": url
     }
 
 
-# FETCH LIVE MARKET NEWS
-def fetch_market_news():
+# -----------------------------------
+# NEWS API
+# -----------------------------------
 
-    query = (
-        "stock market OR inflation OR Federal Reserve "
-        "OR oil OR AI OR geopolitics OR commodities "
-        "OR China OR liquidity OR recession "
-        "OR earnings OR bond yields"
-    )
+def fetch_newsapi():
+
+    url = "https://newsapi.org/v2/everything"
 
     params = {
-
-        "q": query,
-
+        "q": "Federal Reserve OR inflation OR oil OR AI OR geopolitics OR stock market",
         "language": "en",
-
         "sortBy": "publishedAt",
-
-        "pageSize": 20,
-
+        "pageSize": 15,
         "apiKey": NEWS_API_KEY
     }
 
+    news = []
+
     try:
 
-        response = requests.get(
-            URL,
-            params=params,
-            timeout=10
-        )
-
+        response = requests.get(url, params=params)
         data = response.json()
 
-        articles = data.get("articles", [])
+        for article in data.get("articles", []):
 
-        structured_news = []
-
-        for article in articles:
-
-            source_name = (
-                article.get("source", {})
-                .get("name", "Unknown")
-            )
-
-            structured_news.append(
-
+            news.append(
                 structure_article(
-
                     title=article.get("title", ""),
-
-                    summary=article.get(
-                        "description",
-                        ""
-                    ),
-
-                    source=source_name,
-
-                    published=article.get(
-                        "publishedAt",
-                        ""
-                    ),
-
-                    url=article.get("url", ""),
-
-                    category="macro"
+                    summary=article.get("description", ""),
+                    source=article.get("source", {}).get("name", ""),
+                    published=article.get("publishedAt", ""),
+                    url=article.get("url", "")
                 )
             )
 
-        return structured_news
-
     except Exception as e:
+        print("NewsAPI Error:", e)
 
-        print(f"News Fetch Error: {e}")
+    return news
 
-        return []
+
+# -----------------------------------
+# RSS FEEDS
+# -----------------------------------
+
+def fetch_rss():
+
+    feeds = [
+        "http://feeds.reuters.com/reuters/businessNews",
+        "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+    ]
+
+    news = []
+
+    for feed in feeds:
+
+        try:
+
+            parsed = feedparser.parse(feed)
+
+            for entry in parsed.entries[:10]:
+
+                news.append(
+                    structure_article(
+                        title=entry.get("title", ""),
+                        summary=entry.get("summary", ""),
+                        source=feed,
+                        published=entry.get("published", ""),
+                        url=entry.get("link", "")
+                    )
+                )
+
+        except Exception as e:
+            print("RSS Error:", e)
+
+    return news
+
+
+# -----------------------------------
+# MAIN FETCH FUNCTION
+# -----------------------------------
+
+def fetch_market_news():
+
+    newsapi_news = fetch_newsapi()
+
+    rss_news = fetch_rss()
+
+    twitter_news = fetch_twitter_signals()
+
+    all_news = newsapi_news + rss_news + twitter_news
+
+    return all_news

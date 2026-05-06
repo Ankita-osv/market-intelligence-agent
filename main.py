@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 from agents.news_fetcher import fetch_market_news
 from agents.signal_filter import filter_market_news, run_signal_filter
-from agents.narrative_engine import detect_dominant_narratives
+from agents.narrative_engine import detect_dominant_narratives, detect_market_contradictions
 from agents.macro_agent import run_macro_agent
 from agents.sector_agent import run_sector_agent
 from agents.stock_agent import run_stock_agent
@@ -287,6 +287,10 @@ def main():
         dominant_narratives,
         recent_memory
     )
+    contradictions = detect_market_contradictions(
+    market_data,
+    dominant_narratives
+)
     sector_analysis = run_sector_agent(macro_analysis, market_data)
     stock_analysis = run_stock_agent(sector_analysis)
     contrarian_analysis = run_contrarian_agent(
@@ -302,10 +306,10 @@ def main():
     )
     creator_content = run_creator_agent(
         macro_analysis,
+        contradictions,
         sector_analysis,
         stock_analysis,
-        contrarian_analysis,
-        confidence_analysis,
+        contrarian_analysis,        confidence_analysis,        confidence_analysis,
     )
 
     print("\nMACRO AGENT OUTPUT:\n")
@@ -325,6 +329,7 @@ def main():
 ================ MACRO ANALYSIS ================
 
 {macro_analysis}
+
 
 ================ SECTOR ANALYSIS ================
 

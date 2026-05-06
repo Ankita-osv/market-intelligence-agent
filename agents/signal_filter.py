@@ -2,6 +2,11 @@ IMPORTANT_CATEGORIES = {
 
     "macro": [
         "inflation",
+        "fed",
+        "rates",
+        "yield",
+        "bond",
+        "treasury",
         "interest rates",
         "federal reserve",
         "liquidity",
@@ -13,10 +18,47 @@ IMPORTANT_CATEGORIES = {
         "cpi"
     ],
 
+    "earnings": [
+        "earnings",
+        "guidance",
+        "forecast",
+        "revenue",
+        "profit",
+        "forecast",
+        "results",
+        "eps",
+        "ai spending",
+        "capex",
+        "margin",
+        "beat",
+        "miss",
+        "quarterly"
+    ],
+
+    "market_positioning": [
+        "institutional",
+        "flows",
+        "hedge fund",
+        "rotation",
+        "positioning",
+        "risk appetite",
+        "buyback"
+    ],
+
+    "consumer_stress": [
+        "consumer spending",
+        "credit card",
+        "debt",
+        "retail slowdown",
+        "defaults",
+        "housing"
+    ],
+
     "geopolitics": [
         "war",
         "sanctions",
         "military",
+        "crude",
         "trade restrictions",
         "china",
         "russia",
@@ -28,13 +70,17 @@ IMPORTANT_CATEGORIES = {
 
     "technology": [
         "ai",
+        "AI",
         "semiconductors",
         "nvidia",
         "automation",
         "data centers",
         "robotics",
         "openai",
-        "chips"
+        "chips",
+        "microsoft",
+        "google",
+        "cloud computing"
     ],
 
     "commodities": [
@@ -54,13 +100,31 @@ IMPORTANT_CATEGORIES = {
         "de-dollarization",
         "currency",
         "dollar"
-    ],
+        ],
+    "market_behavior": [ 
+        "stocks rise", 
+        "market rally", 
+        "equities surge", 
+        "S&P 500", 
+        "Nasdaq", 
+        "risk-on", 
+        "risk appetite", 
+        "valuation", 
+        "liquidity rally", 
+        "all-time high", 
+        "bull market" ],
 
     "institutional_flows": [
         "hedge funds",
         "etf inflows",
         "capital flows",
-        "institutional investors",
+        "positioning",
+        "rotation",
+        "fund managers",
+        "etf flows",
+        "bond fund flows",
+        "treasure yield",
+       "institutional investors",
         "risk-on",
         "risk-off"
     ]
@@ -84,6 +148,29 @@ NEGATIVE_KEYWORDS = [
     "wedding"
 ]
 
+CATEGORY_WEIGHTS = {
+
+    "macro": 3,
+
+    "earnings": 5,
+
+    "market_positioning": 5,
+
+    "consumer_stress": 4,
+
+    "geopolitics": 2,
+
+    "technology": 5,
+
+    "commodities": 2,
+
+    "currencies": 3,
+
+    "market_behavior": 5,
+
+    "institutional_flows": 5
+}
+
 
 def score_article(title, summary=""):
 
@@ -97,7 +184,7 @@ def score_article(title, summary=""):
         for keyword in keywords:
 
             if keyword in text:
-                score += 3
+                score += CATEGORY_WEIGHTS.get(category, 3)
 
     # NEGATIVE SCORING
     for keyword in NEGATIVE_KEYWORDS:
